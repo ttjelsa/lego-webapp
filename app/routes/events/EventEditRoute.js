@@ -20,6 +20,7 @@ import {
 import { LoginPage } from 'app/components/LoginForm';
 import { transformEvent, time } from './utils';
 import replaceUnlessLoggedIn from 'app/utils/replaceUnlessLoggedIn';
+import moment from 'moment';
 
 const mapStateToProps = (state, props) => {
   const eventId = props.params.eventId;
@@ -59,7 +60,14 @@ const mapStateToProps = (state, props) => {
       addFee: valueSelector(state, 'addFee'),
       isPriced: valueSelector(state, 'isPriced'),
       eventType: valueSelector(state, 'eventType'),
-      priceMember: valueSelector(state, 'priceMember')
+      priceMember: valueSelector(state, 'priceMember'),
+      registrationDeadline:
+        valueSelector(state, 'startTime') &&
+        moment(valueSelector(state, 'startTime')).subtract(
+          valueSelector(state, 'registrationDeadlineHours'),
+          'hours'
+        )
+      // to event.registrationCloseTime
     },
     eventId,
     pools: valueSelector(state, 'pools'),
