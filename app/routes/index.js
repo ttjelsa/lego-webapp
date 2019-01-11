@@ -22,6 +22,7 @@ import timeline from './timeline';
 import surveys from './surveys';
 import tags from './tags';
 import brand from './brand';
+import polls from './polls';
 
 export default {
   path: '/',
@@ -49,8 +50,9 @@ export default {
     surveys,
     tags,
     brand,
-    /* 
-     This will eat all routes that are written after this 
+    polls,
+    /*
+     This will eat all routes that are written after this
      So one cant put any routes after pageNotFound
      */
     pageNotFound
