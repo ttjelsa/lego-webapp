@@ -20,7 +20,9 @@ const mapStateToProps = (state, props) => {
     showFetchMore,
     companies,
     query,
-    loggedIn: props.loggedIn
+    loggedIn: props.loggedIn,
+    hasMore: state.companies.hasMore,
+    fetching: state.companies.fetching
   };
 };
 
@@ -34,5 +36,8 @@ export default compose(
     componentWillReceiveProps: false
   }),
   // $FlowFixMe connect
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(CompaniesPage);

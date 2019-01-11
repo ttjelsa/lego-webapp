@@ -30,8 +30,13 @@
   padding: 20px;
 }
 
-.bekk {
-  width: 100px;
+.cooperator {
+  width: 200px;
   height: auto;
   margin: 10px auto 15px;
+}
+
+.octocat {
+  width: 40px;
+  height: auto;
 }

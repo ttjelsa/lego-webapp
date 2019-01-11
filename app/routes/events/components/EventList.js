@@ -75,11 +75,13 @@ export function EventItem({ event, showTags = true }: EventItemProps) {
       <div>
         <Link to={`/events/${event.id}`}>
           <h3 className={styles.eventItemTitle}>{event.title}</h3>
-          <Attendance
-            registrationCount={event.registrationCount}
-            totalCapacity={event.totalCapacity}
-            style={{ marginLeft: '5px', color: 'black' }}
-          />
+          {event.totalCapacity > 0 && (
+            <Attendance
+              registrationCount={event.registrationCount}
+              totalCapacity={event.totalCapacity}
+              style={{ marginLeft: '5px', color: 'black' }}
+            />
+          )}
         </Link>
 
         <div className={styles.eventTime}>
@@ -111,7 +113,9 @@ function EventListGroup({ name, events = [] }: EventListGroupProps) {
   return isEmpty(events) ? null : (
     <div className={styles.eventGroup}>
       <h2 className={styles.heading}>{name}</h2>
-      {events.map((event, i) => <EventItem key={i} event={event} />)}
+      {events.map((event, i) => (
+        <EventItem key={i} event={event} />
+      ))}
     </div>
   );
 }
@@ -124,6 +128,7 @@ type EventListProps = {
   fetchMore: () => Promise<*>
 };
 
+// $FlowFixMe
 const EventList = (props: EventListProps) => {
   const events = groupEvents(props.events);
   const { icalToken, showFetchMore, fetchMore } = props;

@@ -87,7 +87,8 @@ export type User = {
   fullName: string,
   username: string,
   grade: Grade,
-  allergies: string
+  allergies: string,
+  profilePicture: string
 };
 
 export type EventRegistrationPresence = 'PRESENT' | 'NOT_PRESENT' | 'UNKNOWN';
@@ -143,7 +144,8 @@ export type Group = {
   memberships: Array<GroupMembership>,
   description: string,
   text: string,
-  logo: ?string
+  logo: ?string,
+  showBadge: boolean
 };
 
 export type GroupMembership = {

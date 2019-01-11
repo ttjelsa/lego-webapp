@@ -7,6 +7,7 @@ import articles from './articles';
 import meetings from './meetings';
 import admin from './admin';
 import quotes from './quotes';
+import podcasts from './podcasts';
 import photos from './photos';
 import pages from './pages';
 import search from './search';
@@ -20,6 +21,7 @@ import contact from './contact';
 import timeline from './timeline';
 import surveys from './surveys';
 import tags from './tags';
+import brand from './brand';
 
 export default {
   path: '/',
@@ -33,6 +35,7 @@ export default {
     meetings,
     admin,
     quotes,
+    podcasts,
     pages,
     company,
     search,
@@ -45,6 +48,11 @@ export default {
     ...companyInterest,
     surveys,
     tags,
+    brand,
+    /* 
+     This will eat all routes that are written after this 
+     So one cant put any routes after pageNotFound
+     */
     pageNotFound
   ]
 };

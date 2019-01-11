@@ -7,7 +7,7 @@ import Time from 'app/components/Time';
 import { Container, Flex } from 'app/components/Layout';
 import LoadingIndicator from 'app/components/LoadingIndicator';
 import LatestReadme from './LatestReadme';
-import Feed from './Feed';
+// import Feed from './Feed';
 import CompactEvents from './CompactEvents';
 import { EVENT_TYPE_TO_STRING } from 'app/routes/events/utils';
 import type { Event, Article } from 'app/models';
@@ -18,11 +18,12 @@ import EventItem from './EventItem';
 import ArticleItem from './ArticleItem';
 import Icon from 'app/components/Icon';
 import truncateString from 'app/utils/truncateString';
+import { Link } from 'react-router';
 
 type Props = {
   frontpage: Array<Object>,
-  feed: Object,
-  feedItems: Array<Object>,
+  // feed: Object,
+  // feedItems: Array<Object>,
   readmes: Array<Object>,
   loadingFrontpage: boolean
 };
@@ -58,13 +59,12 @@ class Overview extends Component<Props, State> {
           format="DD.MM HH:mm"
         />
 
-        {item.location !== '-' &&
-          isEvent && (
-            <span>
-              <span className={styles.dot}> . </span>
-              <span> {truncateString(item.location, 10)} </span>
-            </span>
-          )}
+        {item.location !== '-' && isEvent && (
+          <span>
+            <span className={styles.dot}> . </span>
+            <span> {truncateString(item.location, 10)} </span>
+          </span>
+        )}
 
         <span>
           <span className={styles.dot}> . </span>
@@ -74,14 +74,13 @@ class Overview extends Component<Props, State> {
           </span>
         </span>
 
-        {item.tags &&
-          item.tags.length > 0 && (
-            <Tags className={styles.tagline}>
-              {item.tags
-                .slice(0, 3)
-                .map(tag => <Tag className={styles.tag} tag={tag} key={tag} />)}
-            </Tags>
-          )}
+        {item.tags && item.tags.length > 0 && (
+          <Tags className={styles.tagline}>
+            {item.tags.slice(0, 3).map(tag => (
+              <Tag className={styles.tag} tag={tag} key={tag} />
+            ))}
+          </Tags>
+        )}
       </span>
     );
   };
@@ -90,8 +89,8 @@ class Overview extends Component<Props, State> {
     const isEvent = o => typeof o['startTime'] !== 'undefined';
     const {
       frontpage,
-      feed,
-      feedItems,
+      // feed,
+      // feedItems,
       loadingFrontpage,
       readmes
     } = this.props;
@@ -113,17 +112,42 @@ class Overview extends Component<Props, State> {
               )}
             </LoadingIndicator>
           </Flex>
-          <Feed style={{ flex: 2 }} feed={feed} feedItems={feedItems} />
+          {/* <Feed style={{ flex: 2 }} feed={feed} feedItems={feedItems} /> */}
+          <Flex
+            column
+            style={{ flex: '1', padding: '0 10px', margin: '0 auto' }}
+          >
+            <Link to={'/articles?tag=weekly'}>
+              <h3 className="u-ui-heading" style={{ paddingTop: 0 }}>
+                Weekly
+              </h3>
+            </Link>
+
+            <Flex column className={styles.weeklyArticles}>
+              {frontpage
+                .filter(item => item.documentType === 'article')
+                .filter(article => article.tags.includes('weekly'))
+                .map(article => (
+                  <ArticleItem
+                    key={article.id}
+                    item={article}
+                    url={this.itemUrl(article)}
+                    meta={this.renderMeta(article)}
+                  />
+                ))}
+            </Flex>
+          </Flex>
         </Flex>
         <Flex />
-
         <Flex padding={10}>
           <LatestReadme readmes={readmes} expanded={frontpage.length === 0} />
         </Flex>
 
         <Flex className={styles.otherItems}>
           <Flex column style={{ flex: '2' }}>
-            <p className="u-ui-heading">Arrangementer</p>
+            <Link to={'/events'}>
+              <h3 className="u-ui-heading">Arrangementer</h3>
+            </Link>
             <Flex className={styles.events}>
               {frontpage
                 .filter(item => item.documentType === 'event')
@@ -141,10 +165,13 @@ class Overview extends Component<Props, State> {
           </Flex>
 
           <Flex column style={{ flex: '1' }}>
-            <p className="u-ui-heading">Artikler</p>
+            <Link to={'/articles'}>
+              <h3 className="u-ui-heading">Artikler</h3>
+            </Link>
             <Flex className={styles.articles}>
               {frontpage
                 .filter(item => item.documentType === 'article')
+                .filter(article => !article.tags.includes('weekly'))
                 .slice(0, this.state.articlesToShow)
                 .map(article => (
                   <ArticleItem

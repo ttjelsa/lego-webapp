@@ -4,8 +4,8 @@ import styles from './EventEditor.css';
 import React from 'react';
 import { Link } from 'react-router';
 import renderPools, { validatePools } from './renderPools';
-import RegisteredCell from '../RegisteredCell';
 import RegisteredSummary from '../RegisteredSummary';
+import UserGrid from 'app/components/UserGrid';
 import { AttendanceStatus } from 'app/components/UserAttendance';
 import Tag from 'app/components/Tags/Tag';
 import LoadingIndicator from 'app/components/LoadingIndicator';
@@ -139,7 +139,9 @@ function EventEditor({
               uploadFile={uploadFile}
             />
             <Flex className={styles.tagRow}>
-              {(event.tags || []).map((tag, i) => <Tag key={i} tag={tag} />)}
+              {(event.tags || []).map((tag, i) => (
+                <Tag key={i} tag={tag} />
+              ))}
             </Flex>
           </ContentMain>
           <ContentSidebar>
@@ -234,7 +236,8 @@ function EventEditor({
                     <strong>
                       {event.addFee
                         ? addStripeFee(Number(event.priceMember))
-                        : event.priceMember},-
+                        : event.priceMember}
+                      ,-
                     </strong>
                   </i>
                 )}
@@ -294,31 +297,31 @@ function EventEditor({
             </Tooltip>
             <Flex column>
               <h3>Påmeldte:</h3>
-              <Flex className={styles.registeredThumbnails}>
-                {registrations &&
+              <UserGrid
+                minRows={2}
+                maxRows={2}
+                users={
                   registrations
-                    .slice(0, 10)
-                    .map(reg => (
-                      <RegisteredCell key={reg.user.id} user={reg.user} />
-                    ))}
-              </Flex>
+                    ? registrations.slice(0, 14).map(reg => reg.user)
+                    : []
+                }
+              />
               <RegisteredSummary registrations={[]} toggleModal={i => {}} />
               <AttendanceStatus title="Påmeldte" pools={pools} />
               <div className={styles.metaList}>
                 <FieldArray name="pools" component={renderPools} />
               </div>
-              {pools &&
-                pools.length > 1 && (
-                  <Tooltip content="Tidspunkt for å slå sammen poolene">
-                    <Field
-                      label="Sammenslåingstidspunkt"
-                      name="mergeTime"
-                      component={DatePicker.Field}
-                      fieldClassName={styles.metaField}
-                      className={styles.formField}
-                    />
-                  </Tooltip>
-                )}
+              {pools && pools.length > 1 && (
+                <Tooltip content="Tidspunkt for å slå sammen poolene">
+                  <Field
+                    label="Sammenslåingstidspunkt"
+                    name="mergeTime"
+                    component={DatePicker.Field}
+                    fieldClassName={styles.metaField}
+                    className={styles.formField}
+                  />
+                </Tooltip>
+              )}
               {isEditPage && (
                 <Admin
                   actionGrant={actionGrant}
@@ -392,7 +395,9 @@ const validate = data => {
   if (!data.id && !data.cover) {
     errors.cover = 'Cover er påkrevet';
   }
-  errors.pools = validatePools(data.pools);
+  if (data.pools) {
+    errors.pools = validatePools(data.pools);
+  }
   return errors;
 };
 

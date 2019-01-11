@@ -13,8 +13,20 @@ import type { EventRegistration } from 'app/models';
 type State = {
   showCompleted: boolean
 };
+type Props = {
+  registered: Array<EventRegistration>,
+  event: {
+    totalCapacity: number
+  },
+  clearSearch: () => void,
+  handleSelect: SearchResult => Promise<void>,
+  location: Object,
+  onQueryChanged: string => void,
+  results: Array<SearchResult>,
+  searching: boolean
+};
 
-class Abacard extends React.Component<*, State> {
+class Abacard extends React.Component<Props, State> {
   input: ?HTMLInputElement;
   state = {
     showCompleted: false
@@ -40,7 +52,7 @@ class Abacard extends React.Component<*, State> {
           if (payload && payload.errorCode === 'not_registered') {
             alert('Bruker er ikke påmeldt på eventet!');
           } else if (payload && payload.errorCode === 'already_present') {
-            alert('Bruker er allerede satt som tilstede.');
+            alert(payload.error);
           } else {
             alert(
               `Det oppsto en uventet feil: ${JSON.stringify(payload || err)}`
@@ -56,7 +68,10 @@ class Abacard extends React.Component<*, State> {
   };
 
   render() {
-    const registered: Array<EventRegistration> = this.props.registered;
+    const {
+      registered,
+      event: { totalCapacity }
+    } = this.props;
     const registerCount = registered.filter(
       reg => reg.presence === 'PRESENT' && reg.pool
     ).length;
@@ -85,7 +100,7 @@ class Abacard extends React.Component<*, State> {
           }}
         />
         <div className={styles.counter}>
-          {registerCount}/{registered.length} har møtt opp
+          {registerCount}/{totalCapacity} har møtt opp
         </div>
       </div>
     );

@@ -73,51 +73,48 @@ class AnnouncementInLine extends Component<Props, State> {
 
     return (
       <div>
-        {actionGrant &&
-          (event || meeting || group) && (
-            <div>
-              {showButton && (
-                <Button
-                  onClick={this.handleHide}
-                  className={styles.announcementButton}
-                >
-                  Ny kunngjøring
-                </Button>
-              )}
-              {showLabel && (
-                <a
-                  onClick={this.handleHide}
-                  className={cx(
-                    button ? styles.labelButton : styles.label,
-                    className
-                  )}
-                >
-                  {!this.state.sent
-                    ? ' Ny kunngjøring '
-                    : ' Kunngjøring sendt '}
-                </a>
-              )}
+        {actionGrant && (event || meeting || group) && (
+          <div>
+            {showButton && (
+              <Button
+                onClick={this.handleHide}
+                className={styles.announcementButton}
+              >
+                Ny kunngjøring
+              </Button>
+            )}
+            {showLabel && (
+              <a
+                onClick={this.handleHide}
+                className={cx(
+                  button ? styles.labelButton : styles.label,
+                  className
+                )}
+              >
+                {!this.state.sent ? ' Ny kunngjøring ' : ' Kunngjøring sendt '}
+              </a>
+            )}
 
-              {showForm && (
-                <Form
-                  onSubmit={handleSubmit(values =>
-                    this.onSubmit(values, event, meeting, group)
-                  )}
-                >
-                  <Field
-                    name="message"
-                    component={TextArea.Field}
-                    placeholder={placeholder || 'Skriv din kunngjøring her...'}
-                    fieldClassName={styles.field}
-                    className={styles.fieldText}
-                  />
-                  <Button submit className={styles.button}>
-                    SEND
-                  </Button>
-                </Form>
-              )}
-            </div>
-          )}
+            {showForm && (
+              <Form
+                onSubmit={handleSubmit(values =>
+                  this.onSubmit(values, event, meeting, group)
+                )}
+              >
+                <Field
+                  name="message"
+                  component={TextArea.Field}
+                  placeholder={placeholder || 'Skriv din kunngjøring her...'}
+                  fieldClassName={styles.field}
+                  className={styles.fieldText}
+                />
+                <Button submit className={styles.button}>
+                  SEND
+                </Button>
+              </Form>
+            )}
+          </div>
+        )}
       </div>
     );
   }
@@ -132,7 +129,10 @@ const mapStateToProps = state => ({ actionGrant: state.allowed.announcements });
 const mapDispatchToProps = { createAnnouncement };
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   reduxForm({
     form: 'announcementInline',
     onSubmitSuccess: resetForm,

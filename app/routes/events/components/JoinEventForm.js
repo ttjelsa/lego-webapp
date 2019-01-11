@@ -25,7 +25,7 @@ type Event = Object;
 export type Props = {
   title?: string,
   event: Event,
-  registration: Object,
+  registration: ?Object,
   currentUser: Object,
   onSubmit: Object => void,
   onToken: () => void,
@@ -162,8 +162,12 @@ class JoinEventForm extends Component<Props> {
       ? isInvalid || isPristine || submitting
       : false;
     const disabledForUser = !formOpen && !event.activationTime;
-    const showPenaltyNotice =
-      event.heedPenalties && moment().isAfter(event.unregistrationDeadline);
+    const showPenaltyNotice = Boolean(
+      event.heedPenalties &&
+        moment().isAfter(event.unregistrationDeadline) &&
+        registration &&
+        registration.pool
+    );
     const showCaptcha =
       !submitting && !registration && captchaOpen && event.useCaptcha;
     const showStripe =
@@ -177,13 +181,11 @@ class JoinEventForm extends Component<Props> {
 
     return (
       <Flex column className={styles.join}>
-        {!formOpen &&
-          event.activationTime && (
-            <div>
-              Åpner{' '}
-              <Time time={event.activationTime} format="nowToTimeInWords" />
-            </div>
-          )}
+        {!formOpen && event.activationTime && (
+          <div>
+            Åpner <Time time={event.activationTime} format="nowToTimeInWords" />
+          </div>
+        )}
         {disabledForUser && (
           <div>Du kan ikke melde deg på dette arrangementet.</div>
         )}
@@ -237,53 +239,51 @@ class JoinEventForm extends Component<Props> {
                   component={Captcha.Field}
                 />
               )}
-              {event.activationTime &&
-                registrationOpensIn && (
-                  <Flex alignItems="center">
-                    <Button disabled={disabledButton}>
-                      {`Åpner om ${registrationOpensIn}`}
-                    </Button>
-                  </Flex>
-                )}
-              {buttonOpen &&
-                !submitting && (
-                  <Flex alignItems="center">
-                    <SubmitButton
-                      disabled={disabledButton}
-                      onSubmit={this.submitWithType(
-                        handleSubmit,
-                        feedbackName,
-                        registrationType
-                      )}
-                      type={registrationType}
-                      title={title || joinTitle}
-                      showPenaltyNotice={showPenaltyNotice}
-                    />
+              {event.activationTime && registrationOpensIn && (
+                <Flex alignItems="center">
+                  <Button disabled={disabledButton}>
+                    {`Åpner om ${registrationOpensIn}`}
+                  </Button>
+                </Flex>
+              )}
+              {buttonOpen && !submitting && (
+                <Flex alignItems="center">
+                  <SubmitButton
+                    disabled={disabledButton}
+                    onSubmit={this.submitWithType(
+                      handleSubmit,
+                      feedbackName,
+                      registrationType
+                    )}
+                    type={registrationType}
+                    title={title || joinTitle}
+                    showPenaltyNotice={showPenaltyNotice}
+                  />
 
-                    {!registration && (
-                      <SpotsLeft
-                        activeCapacity={event.activeCapacity}
-                        spotsLeft={event.spotsLeft}
-                      />
-                    )}
-                    {showStripe && (
-                      <StripeCheckout
-                        name="Abakus Linjeforening"
-                        description={event.title}
-                        image={logoImage}
-                        currency="NOK"
-                        allowRememberMe
-                        locale="no"
-                        token={onToken}
-                        stripeKey={config.stripeKey}
-                        amount={event.price}
-                        email={currentUser.email}
-                      >
-                        <Button>Betal nå</Button>
-                      </StripeCheckout>
-                    )}
-                  </Flex>
-                )}
+                  {!registration && (
+                    <SpotsLeft
+                      activeCapacity={event.activeCapacity}
+                      spotsLeft={event.spotsLeft}
+                    />
+                  )}
+                  {showStripe && (
+                    <StripeCheckout
+                      name="Abakus Linjeforening"
+                      description={event.title}
+                      image={logoImage}
+                      currency="NOK"
+                      allowRememberMe
+                      locale="no"
+                      token={onToken}
+                      stripeKey={config.stripeKey}
+                      amount={event.price}
+                      email={currentUser.email}
+                    >
+                      <Button>Betal nå</Button>
+                    </StripeCheckout>
+                  )}
+                </Flex>
+              )}
               {submitting && (
                 <LoadingIndicator
                   loading
@@ -341,7 +341,10 @@ function mapStateToProps(state, { event, registration }) {
 
 export default compose(
   // $FlowFixMe
-  connect(mapStateToProps, null),
+  connect(
+    mapStateToProps,
+    null
+  ),
   withCountdown,
   reduxForm({
     form: 'joinEvent',

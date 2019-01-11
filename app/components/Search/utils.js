@@ -62,7 +62,7 @@ const LINKS: Array<Link> = [
   {
     key: 'quotes',
     title: 'Sitater',
-    url: '/quotes'
+    url: '/quotes/?filter=all'
   },
   {
     key: 'companies',
@@ -78,6 +78,11 @@ const LINKS: Array<Link> = [
     key: 'tags',
     title: 'Tags',
     url: '/tags'
+  },
+  {
+    key: 'podcasts',
+    title: 'Podcasts',
+    url: '/podcasts'
   },
   {
     admin: true,

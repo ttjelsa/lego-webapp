@@ -49,14 +49,13 @@ const mapStateToProps = (state, props) => {
         event: initialEvent,
         questions:
           survey.questions &&
-          survey.questions.map(
-            question =>
-              question.options
-                ? {
-                    ...question,
-                    options: question.options.concat({ optionText: '' })
-                  }
-                : question
+          survey.questions.map(question =>
+            question.options
+              ? {
+                  ...question,
+                  options: question.options.concat({ optionText: '' })
+                }
+              : question
           )
       };
     }
@@ -87,6 +86,9 @@ const mapDispatchToProps = {
 export default compose(
   replaceUnlessLoggedIn(LoginPage),
   prepare(loadData, ['params.surveyId', 'location.query.templateType']),
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   loadingIndicator(['notFetching'])
 )(SurveyEditor);
