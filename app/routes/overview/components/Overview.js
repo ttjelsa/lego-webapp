@@ -122,9 +122,11 @@ class Overview extends Component<Props, State> {
             column
             style={{ flex: '1', padding: '0 10px', margin: '0 auto' }}
           ><Link to={'/polls'}>
-            <h3 className="u-ui-heading">Avstemning</h3>
+            <h3 className="u-ui-heading" style={{padding: '0', margin: '0 0 10px 0'}}>Avstemning</h3>
           </Link>
-            {poll && <Poll poll={poll} handleVote={votePoll}/>}
+            <LoadingIndicator loading={loadingFrontpage}>
+            {poll && <Poll poll={poll} handleVote={votePoll} truncate={3}/>}
+            </LoadingIndicator>
             <Link to={'/articles?tag=weekly'}>
               <h3 className="u-ui-heading" style={{ paddingTop: 0 }}>
                 Weekly
