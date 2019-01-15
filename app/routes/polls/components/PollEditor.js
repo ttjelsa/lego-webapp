@@ -6,12 +6,12 @@ import NavigationTab, { NavigationLink } from 'app/components/NavigationTab';
 import Button from 'app/components/Button';
 import Icon from 'app/components/Icon';
 import { Link } from 'react-router';
-import { push } from 'react-router-redux';
 import {
   TextInput,
   SelectInput,
   TextArea,
-  legoForm
+  legoForm,
+  CheckBox
 } from 'app/components/Form';
 import { Form, Field, FieldArray } from 'redux-form';
 import { ConfirmModalWithParent } from 'app/components/Modal/ConfirmModal';
@@ -95,7 +95,11 @@ class EditPollForm extends Component<Props, *> {
           placeholder="Mer info..."
           component={TextArea.Field}
         />
-        <p>{'Bruk tagen "frontpage" for å vise avstemningen på forsiden.'}</p>
+        <Field
+          name="pinned"
+          label="Vis på forsiden"
+          component={CheckBox.Field}
+        />
         <Field
           name="tags"
           label="Tags"

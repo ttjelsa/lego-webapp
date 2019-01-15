@@ -66,6 +66,7 @@ const PollsList = (props: props, state) => {
           ))}
         </section>
       </Paginator>
+      <LoadingIndicator loading={fetching}/>
     </Content>
   );
 };

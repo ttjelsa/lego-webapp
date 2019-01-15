@@ -61,3 +61,8 @@ export const selectPollByTag = createSelector(
     return polls.find(polls => polls.tags.includes(tag))
   }
 )
+
+export const selectPinnedPolls = createSelector(
+  selectPolls,
+  polls => polls.find(polls => polls.pinned)
+)
