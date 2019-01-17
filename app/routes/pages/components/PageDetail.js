@@ -31,31 +31,55 @@ type Props<T> = {
   pageHierarchy: Array<HierarchySectionEntity>
 };
 
+export const MainPageRenderer = ({
+  page,
+  pageInfo,
+  ChildPageRenderer
+}: {
+  page: Object,
+  pageInfo: Object,
+  ChildPageRenderer: ({ page: T }) => Node
+}) => {
+  const pageBanner = page.logo || page.picture;
+  const { title } = pageInfo;
+
+  return (
+    <article className={styles.pageWrapper}>
+      {pageBanner && (
+        <div className={styles.logo}>
+          <img alt={`${title} page banner`} src={pageBanner} />
+        </div>
+      )}
+      <h1 className={styles.header1}>{readmeIfy(title)}</h1>
+      <ChildPageRenderer page={page} pageInfo={pageInfo} />
+    </article>
+  );
+};
+
 export const FlatpageRenderer = ({ page }: { page: PageEntity }) => (
   <article className={styles.detail}>
-    {page.picture && (
-      <div className={styles.coverImage}>
-        <img alt="presentation" src={page.picture} />
-      </div>
-    )}
     <DisplayContent content={page.content} />
   </article>
 );
 
-export const GroupRenderer = ({ page }: { page: Object }) => {
+const RenderUser = ({ user }: Object) => (
+  <Link to={`/users/${user.username}`}>{user.fullName}</Link>
+);
+
+export const GroupRenderer = ({
+  page,
+  pageInfo
+}: {
+  page: Object,
+  pageInfo: Object
+}) => {
   const { membershipsByRole, text, logo } = page;
 
   const { leader: leaders = [], member: members = [] } = membershipsByRole;
 
   return (
     <article className={styles.detail}>
-      {logo && (
-        <div className={styles.logo}>
-          <img alt="presentation" src={logo} />
-        </div>
-      )}
       <DisplayContent content={text} />
-
       <h3 className={styles.heading}>MEDLEMMER</h3>
       <div className={styles.membersSection}>
         <div className={styles.leader}>
@@ -82,41 +106,70 @@ export const GroupRenderer = ({ page }: { page: Object }) => {
   );
 };
 
-function PageDetail<T: Object>({
+const PageDetail = ({
   selectedPage,
   selectedPageInfo,
   pageHierarchy,
   PageRenderer,
-  currentUrl
-}: Props<T>) {
+  currentUrl,
+  ...rest
+}: Props<T>) => {
   if (!selectedPage) {
     return <LoadingIndicator loading />;
   }
-  const { title, editUrl, actionGrant = [], isComplete } = selectedPageInfo;
+  const { editUrl, actionGrant = [], isComplete } = selectedPageInfo;
+  const pictureLabel = 'Listingløpet 1985';
   return (
-    <Content>
-      <NavigationTab title={readmeIfy(title)}>
-        {actionGrant.includes('edit') && editUrl && (
-          <NavigationLink to={editUrl}>Endre</NavigationLink>
-        )}
-        {actionGrant.includes('create') && (
-          <NavigationLink to="/pages/new">Ny</NavigationLink>
-        )}
-      </NavigationTab>
-      <Flex className={styles.page} wrap>
-        {isComplete ? (
-          <PageRenderer page={selectedPage} />
-        ) : (
-          <LoadingIndicator loading />
-        )}
-        <aside className={styles.sidebar}>
-          <PageHierarchy
-            pageHierarchy={pageHierarchy}
-            currentUrl={currentUrl}
-          />
-        </aside>
-      </Flex>
+    <Content className={styles.cont}>
+      <div className={styles.main}>
+        <Flex className={styles.page} wrap>
+          <div className={styles.side}>
+            <aside className={styles.sidebar}>
+              <div className={styles.sidebarTop}>
+                <h3> Om Abakus </h3>
+                <div className={styles.sidebarPicture}>
+                  <h4> {"Abakus' Fortid"}</h4>
+                  <a href="https://abakus.no/photos/183/picture/460">
+                    <img
+                      alt={pictureLabel}
+                      className={styles.oldImg}
+                      src="https://thumbor.abakus.no/BT--sOMt9dTlSr93y_D3fCso9YE=/0x700/smart/scan713_OcOF51m.jpg"
+                    />
+                    <span className={styles.pictureInfo}>{pictureLabel}</span>
+                  </a>
+                </div>
+              </div>
+              <div className={styles.sidebarBottom}>
+                <PageHierarchy
+                  pageHierarchy={pageHierarchy}
+                  currentUrl={currentUrl}
+                />
+              </div>
+            </aside>
+          </div>
+          <div className={styles.mainTxt}>
+            <NavigationTab>
+              {actionGrant.includes('edit') && editUrl && (
+                <NavigationLink to={editUrl}>Endre</NavigationLink>
+              )}
+              {actionGrant.includes('create') && (
+                <NavigationLink to="/pages/new">Ny</NavigationLink>
+              )}
+            </NavigationTab>
+
+            {isComplete ? (
+              <MainPageRenderer
+                page={selectedPage}
+                pageInfo={selectedPageInfo}
+                ChildPageRenderer={PageRenderer}
+              />
+            ) : (
+              <LoadingIndicator loading />
+            )}
+          </div>
+        </Flex>
+      </div>
     </Content>
   );
-}
+};
 export default PageDetail;

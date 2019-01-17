@@ -32,13 +32,13 @@ const HierarchySection = ({
       <li key="title">
         <p className={styles.header}>{title}</p>
       </li>
-    )}
+    )}{' '}
     {items.map((item, key) => (
-      <li key={key}>
+      <li key={key} className={styles.links}>
         <Link
-          style={{
-            fontWeight: item.url === currentUrl ? 'bold' : 'normal'
-          }}
+          className={
+            item.url === currentUrl ? styles.selected : styles.nonSelected
+          }
           to={item.url}
         >
           {readmeIfy(item.title)}
