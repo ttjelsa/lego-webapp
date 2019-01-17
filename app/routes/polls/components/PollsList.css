@@ -1,4 +1,5 @@
 @import 'app/styles/variables.css';
+
 .pollsList {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -19,7 +20,7 @@
 }
 
 .icon {
-  color: var(--lego-red-color)
+  color: var(--lego-red-color);
 }
 
 .heading {

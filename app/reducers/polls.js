@@ -8,6 +8,10 @@ export type PollEntity = {
   id: number,
   title: string,
   description: string,
+  pinned: boolean,
+  tags: Array<string>,
+  hasAnswered: boolean,
+  totalVotes: number,
   options: Array<OptionEntity>
 };
 

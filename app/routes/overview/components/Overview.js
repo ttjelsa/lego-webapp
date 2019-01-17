@@ -19,14 +19,15 @@ import ArticleItem from './ArticleItem';
 import Icon from 'app/components/Icon';
 import truncateString from 'app/utils/truncateString';
 import { Link } from 'react-router';
-import Poll from 'app/components/Poll'
+import Poll from 'app/components/Poll';
+import type { PollEntity } from 'app/reducers/polls';
 
 type Props = {
   frontpage: Array<Object>,
   // feed: Object,
   // feedItems: Array<Object>,
   readmes: Array<Object>,
-  poll: Object,
+  poll: PollEntity,
   votePoll: () => Promise<*>,
   loadingFrontpage: boolean
 };
