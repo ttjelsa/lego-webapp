@@ -19,16 +19,12 @@ import ArticleItem from './ArticleItem';
 import Icon from 'app/components/Icon';
 import truncateString from 'app/utils/truncateString';
 import { Link } from 'react-router';
-import Poll from 'app/components/Poll';
-import type { PollEntity } from 'app/reducers/polls';
 
 type Props = {
   frontpage: Array<Object>,
   // feed: Object,
   // feedItems: Array<Object>,
   readmes: Array<Object>,
-  poll: PollEntity,
-  votePoll: () => Promise<*>,
   loadingFrontpage: boolean
 };
 
@@ -96,9 +92,7 @@ class Overview extends Component<Props, State> {
       // feed,
       // feedItems,
       loadingFrontpage,
-      readmes,
-      poll,
-      votePoll
+      readmes
     } = this.props;
     const pinned = frontpage[0];
 
@@ -122,17 +116,13 @@ class Overview extends Component<Props, State> {
           <Flex
             column
             style={{ flex: '1', padding: '0 10px', margin: '0 auto' }}
-          ><Link to={'/polls'}>
-            <h3 className="u-ui-heading" style={{padding: '0', margin: '0 0 10px 0'}}>Avstemning</h3>
-          </Link>
-            <LoadingIndicator loading={loadingFrontpage}>
-            {poll && <Poll poll={poll} handleVote={votePoll} truncate={3}/>}
-            </LoadingIndicator>
+          >
             <Link to={'/articles?tag=weekly'}>
               <h3 className="u-ui-heading" style={{ paddingTop: 0 }}>
                 Weekly
               </h3>
             </Link>
+
             <Flex column className={styles.weeklyArticles}>
               {frontpage
                 .filter(item => item.documentType === 'article')
