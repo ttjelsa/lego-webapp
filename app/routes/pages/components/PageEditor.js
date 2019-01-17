@@ -22,7 +22,8 @@ import { get } from 'lodash';
 type Page = {
   title: string,
   content: string,
-  picture?: string
+  picture?: string,
+  category: string
 };
 
 export type Props = {
@@ -42,7 +43,8 @@ export type Props = {
 type State = {
   page: {
     picture: string,
-    content: string
+    content: string,
+    category: string
   },
   images: { [key: string]: string }
 };
@@ -59,7 +61,8 @@ export default class PageEditor extends Component<Props, State> {
   state = {
     page: {
       picture: get(this.props, ['page', 'picture']),
-      content: get(this.props, ['page', 'content'])
+      content: get(this.props, ['page', 'content']),
+      category: get(this.props, ['page', 'category'])
     },
     images: {}
   };
@@ -86,7 +89,8 @@ export default class PageEditor extends Component<Props, State> {
     const body = {
       title: data.title,
       content: data.content,
-      picture: undefined
+      picture: undefined,
+      category: data.category
     };
 
     const { push, pageSlug } = this.props;
@@ -146,6 +150,7 @@ export default class PageEditor extends Component<Props, State> {
               name="category"
               component={SelectInput.Field}
               placeholder="Velg kategori"
+              simpleValue
               options={categoryOptions}
             />
 
