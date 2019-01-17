@@ -10,7 +10,8 @@ import {
   EditorField,
   TextInput,
   Form,
-  withSubmissionError
+  withSubmissionError,
+  SelectInput
 } from 'app/components/Form';
 import ImageUpload from 'app/components/Upload/ImageUpload';
 import NavigationTab, { NavigationLink } from 'app/components/NavigationTab';
@@ -45,6 +46,14 @@ type State = {
   },
   images: { [key: string]: string }
 };
+
+const categoryOptions = [
+  { value: 'generelt', label: 'Generelt' },
+  { value: 'bedrifter', label: 'Bedrifter' },
+  { value: 'arrangementer', label: 'Arrangementer' },
+  { value: 'undergrupper', label: 'Undergrupper' },
+  { value: 'interessegrupper', label: 'Interessegrupper' }
+];
 
 export default class PageEditor extends Component<Props, State> {
   state = {
@@ -132,6 +141,12 @@ export default class PageEditor extends Component<Props, State> {
               name="title"
               component={TextInput.Field}
               id="page-title"
+            />
+            <Field
+              name="category"
+              component={SelectInput.Field}
+              placeholder="Velg kategori"
+              options={categoryOptions}
             />
 
             {!isNew && (
