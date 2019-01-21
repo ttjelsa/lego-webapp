@@ -32,7 +32,7 @@ export default createEntityReducer({
       case Poll.DELETE.SUCCESS:
         return {
           ...state,
-          items: state.items.filter(id => action.meta.polls !== id)
+          items: state.items.filter(id => action.meta.pollId !== id)
         };
       default:
         return state;

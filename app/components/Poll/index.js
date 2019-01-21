@@ -6,6 +6,7 @@ import styles from './Poll.css';
 import type { PollEntity, OptionEntity } from 'app/reducers/polls';
 import { Link } from 'react-router';
 import Icon from 'app/components/Icon';
+import { Flex } from 'app/components/Layout';
 
 type Props = {
   poll: PollEntity,
@@ -118,18 +119,19 @@ class Poll extends React.Component<Props, State> {
           </div>
         )}
         {!hasAnswered && (
-          <div>
+          <Flex column>
             {options &&
               optionsToShow.map(option => (
-                <Button
-                  key={option.id}
-                  className={styles.voteButton}
-                  onClick={() => handleVote(poll.id, option.id)}
-                >
-                  {option.name}
-                </Button>
+                <Flex style={{ justifyContent: 'center' }} key={option.id}>
+                  <Button
+                    className={styles.voteButton}
+                    onClick={() => handleVote(poll.id, option.id)}
+                  >
+                    {option.name}
+                  </Button>
+                </Flex>
               ))}
-          </div>
+          </Flex>
         )}
         {truncateOptions && (
           <div className={styles.moreOptionsLink}>

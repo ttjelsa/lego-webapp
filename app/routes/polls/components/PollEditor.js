@@ -142,7 +142,7 @@ class EditPollForm extends Component<Props, *> {
             <ConfirmModalWithParent
               title="Slett avstemning"
               message="Er du sikker på at du vil slette avstemningen?"
-              onConfirm={() => Promise.resolve(deletePoll())}
+              onConfirm={deletePoll}
               closeOnConfirm
               className={styles.deletePoll}
             >
