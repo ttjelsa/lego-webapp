@@ -11,24 +11,24 @@ const mapStateToProps = (state, props) => {
   const id = props.params.pollsId;
   const poll = selectPollsById(state, id);
 
-  if (poll)
-    return {
-      poll: poll,
-      fetching: state.polls.fetching,
-      actionGrant: poll.actionGrant ? poll.actionGrant : [],
-      initialValues: {
-        pollId: id,
-        title: poll.title,
-        description: poll.description,
-        pinned: poll.pinned,
-        tags: poll.tags.map(value => ({
-          className: 'Select-create-option-placeholder',
-          label: value,
-          value: value
-        })),
-        options: poll.options
-      }
-    };
+  if (!poll) return {};
+  return {
+    poll: poll,
+    fetching: state.polls.fetching,
+    actionGrant: poll.actionGrant ? poll.actionGrant : [],
+    initialValues: {
+      pollId: id,
+      title: poll.title,
+      description: poll.description,
+      pinned: poll.pinned,
+      tags: poll.tags.map(value => ({
+        className: 'Select-create-option-placeholder',
+        label: value,
+        value: value
+      })),
+      options: poll.options
+    }
+  };
 };
 
 const mapDispatchToProps = {
